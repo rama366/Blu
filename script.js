@@ -16,6 +16,15 @@ const CONFIG = {
     tradeLanes: null,
     yearsInBusiness: null
   },
+  about: {
+    story: "[Add Blues Company's verified company story here.]",
+    mission: "[Add a concise, verified mission statement here.]",
+    promises: [
+      "[Describe a specific service promise the team can consistently meet.]",
+      "[Describe how customers are kept informed during a shipment.]",
+      "[Describe how shipment details and documents are reviewed.]"
+    ]
+  },
   volumetricDivisor: 6000,
   tradeLanes: [],
   carriers: [
@@ -43,7 +52,7 @@ const CONFIG = {
     DPU: { cost: 96, risk: 96, summary: "The seller arranges delivery and unloading at the named destination and bears risk through unloading. The buyer handles import clearance." },
     DDP: { cost: 100, risk: 100, summary: "The seller bears the costs and risks through delivery at the named destination, including import clearance and duties; the buyer unloads." }
   },
-  serviceIcons: ["ship", "plane", "truck", "documents", "warehouse", "crane", "shield"]
+  serviceIcons: ["anchor", "compass", "container", "compass", "container", "crane", "anchor"]
 };
 
 const $ = (selector, scope = document) => scope.querySelector(selector);
@@ -171,6 +180,17 @@ function renderServiceIcons() {
     use.setAttribute("href", `images/freight-icons.svg#${CONFIG.serviceIcons[index]}`);
     svg.append(use);
     container.replaceChildren(svg);
+  });
+}
+
+function renderAboutDetails() {
+  $("#about-story").textContent = CONFIG.about.story;
+  $("#about-mission").textContent = CONFIG.about.mission;
+  const promiseList = $("#about-promises");
+  CONFIG.about.promises.forEach(promise => {
+    const item = document.createElement("li");
+    item.textContent = promise;
+    promiseList.append(item);
   });
 }
 
@@ -703,6 +723,7 @@ function initialize() {
   addQuoteWhatsAppActions();
   addWhatsAppIcons();
   renderServiceIcons();
+  renderAboutDetails();
   renderEditableDetails();
   initializeTheme();
   setupMotion();

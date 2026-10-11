@@ -1,7 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
-  <title id="title">Blues Company BC monogram</title>
-  <rect width="64" height="64" fill="#0b1d32"/>
-  <rect x="3.5" y="3.5" width="57" height="57" fill="none" stroke="#b28e4c"/>
-  <path d="M15 13h15c9 0 14 4 14 11 0 4-2 7-6 9 6 1 9 5 9 10 0 7-5 11-15 11H15V13zm8 7v10h7c4 0 6-2 6-5s-2-5-7-5h-6zm0 17v10h8c5 0 7-1 7-5 0-3-2-5-7-5h-8z" fill="#e3cc99"/>
-  <path d="M50 18a16 16 0 1 0 0 29" fill="none" stroke="#b28e4c" stroke-width="3" stroke-linecap="square"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="crest-title">
+  <title id="crest-title">Blues Company maritime compass and anchor crest</title>
+  <circle cx="48" cy="48" r="45" fill="#f7f2e6" stroke="#92713b" stroke-width="1.5"/>
+  <circle cx="48" cy="48" r="39" fill="none" stroke="#92713b" stroke-width=".8"/>
+  <path d="m48 13 5 28 28 7-28 6-5 29-6-29-27-6 27-7z" fill="none" stroke="#92713b" stroke-width="1"/>
+  <path d="M48 30v38m-12-22h24m-12-16a5 5 0 1 0 0 10m-21 12a21 21 0 0 0 42 0h-7m-35 0 7-7m35 7-7-7" fill="none" stroke="#0b1d32" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M32 75h32" stroke="#92713b" stroke-width="1"/>
+  <text x="48" y="85" fill="#0b1d32" font-family="Georgia,serif" font-size="7" font-weight="bold" letter-spacing="2" text-anchor="middle">BLUES</text>
 </svg>
