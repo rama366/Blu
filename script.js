@@ -59,6 +59,8 @@ const quoteForm = $("#quote-form");
 const quoteSubmit = $("#quote-submit");
 const quoteStatus = $("#quote-status");
 const whatsappBriefLink = $("#send-brief-whatsapp");
+const whatsappQuoteLink = $("#quote-whatsapp-current");
+const whatsappSuccessLink = document.createElement("a");
 const carrierSearch = $("#carrier-search");
 const carrierItems = $$(".carrier-item");
 const carrierCount = $("#carrier-count");
@@ -82,6 +84,83 @@ function setContactDetails() {
   const origin = $("#origin");
   if (!origin.value) origin.value = CONFIG.homeCity;
 }
+
+function createWhatsAppIcon() {
+  const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  const symbol = document.createElementNS("http://www.w3.org/2000/svg", "use");
+  icon.classList.add("whatsapp-icon");
+  icon.setAttribute("viewBox", "0 0 32 32");
+  icon.setAttribute("aria-hidden", "true");
+  icon.setAttribute("focusable", "false");
+  symbol.setAttribute("href", "images/freight-icons.svg#whatsapp");
+  icon.append(symbol);
+  return icon;
+}
+
+function addWhatsAppIcons() {
+  document.querySelectorAll('a[href^="https://wa.me/"]').forEach(link => {
+    if (link.querySelector(".whatsapp-icon")) return;
+    const icon = createWhatsAppIcon();
+    if (link.id === "whatsapp-float") {
+      const oldMark = link.querySelector("span");
+      if (oldMark) oldMark.replaceWith(icon);
+      else link.prepend(icon);
+    } else {
+      link.prepend(icon);
+      link.classList.add("has-whatsapp-icon");
+    }
+  });
+}
+
+function addQuoteWhatsAppActions() {
+  whatsappSuccessLink.id = "quote-whatsapp-success";
+  whatsappSuccessLink.className = "button button-whatsapp quote-whatsapp-success";
+  whatsappSuccessLink.target = "_blank";
+  whatsappSuccessLink.rel = "noopener noreferrer";
+  whatsappSuccessLink.textContent = "Also send these details on WhatsApp";
+  whatsappSuccessLink.hidden = true;
+  whatsappSuccessLink.prepend(createWhatsAppIcon());
+
+  $(".quote-heading").append(whatsappQuoteLink);
+  quoteStatus.insertAdjacentElement("afterend", whatsappSuccessLink);
+
+  const hiddenFields = [
+    ["subject", "New quote request from Blues Company website"],
+    ["from_name", "Blues Company Website"],
+    ["replyto", ""]
+  ];
+  hiddenFields.forEach(([name, value]) => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = name;
+    input.value = value;
+    quoteForm.prepend(input);
+  });
+  updateQuoteWhatsAppLink();
+}
+
+function makeQuoteWhatsAppUrl(values) {
+  const rows = [
+    ["Name", values.get("name")], ["Company", values.get("company")],
+    ["Phone", values.get("phone")], ["Email", values.get("email")],
+    ["Service", values.get("service")], ["Cargo type", values.get("cargoType")],
+    ["Shipping mode", values.get("mode")], ["Origin", values.get("origin")],
+    ["Destination", values.get("destination")], ["Approximate weight / volume", values.get("weightVolume")],
+    ["Message", values.get("message")]
+  ].filter(([, value]) => String(value || "").trim());
+  const message = ["Freight quote request for Blues Company", "", ...rows.map(([label, value]) => `${label}: ${value}`)].join("\n");
+  return `https://wa.me/${CONFIG.whatsappPhone}?text=${encodeURIComponent(message)}`;
+}
+
+function updateQuoteWhatsAppLink() {
+  const values = new FormData(quoteForm);
+  const replyTo = quoteForm.elements.namedItem("replyto");
+  if (replyTo) replyTo.value = String(values.get("email") || "").trim();
+  whatsappQuoteLink.href = makeQuoteWhatsAppUrl(values);
+}
+
+quoteForm.addEventListener("input", updateQuoteWhatsAppLink);
+quoteForm.addEventListener("change", updateQuoteWhatsAppLink);
 
 function renderServiceIcons() {
   $$(".service-icon").forEach((container, index) => {
@@ -423,6 +502,7 @@ function copyPlannerIntoQuote(extraMessage = "", calculatedWeight = "") {
 }
 $("#use-shipment-brief").addEventListener("click", () => {
   copyPlannerIntoQuote();
+  updateQuoteWhatsAppLink();
   quoteStatus.textContent = "Shipment details copied into the quote form. Add your contact details to continue.";
   $("#contact").scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
   quoteForm.querySelector("[name=name]").focus({ preventScroll: true });
@@ -431,9 +511,17 @@ $$(".service-quote").forEach(button => button.addEventListener("click", () => {
   setQuoteValue("service", button.dataset.service);
   const service = button.dataset.service.toLowerCase();
   setQuoteValue("mode", service.includes("air") ? "air" : service.includes("road") ? "road" : service.includes("sea") ? "sea" : "not sure");
+  setQuoteValue("message", `Please prepare a quote for ${button.dataset.service}.`);
+  updateQuoteWhatsAppLink();
   $("#contact").scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
   window.setTimeout(() => $("#quote-name").focus({ preventScroll: true }), reducedMotion ? 0 : 450);
 }));
+
+const routeRequestLink = $$("#site-nav a").find(link => link.textContent.trim() === "Ask about a route");
+routeRequestLink?.addEventListener("click", () => {
+  setQuoteValue("message", "Please check my requested origin and destination and advise on route options.");
+  updateQuoteWhatsAppLink();
+});
 
 quoteForm.addEventListener("submit", async event => {
   event.preventDefault();
@@ -451,14 +539,20 @@ quoteForm.addEventListener("submit", async event => {
   quoteStatus.textContent = "Sending your request securely...";
   const payload = new FormData(quoteForm);
   payload.set("access_key", CONFIG.web3FormsAccessKey);
-  payload.set("subject", `Freight quote request — ${CONFIG.companyName}`);
+  payload.set("subject", "New quote request from Blues Company website");
+  payload.set("from_name", "Blues Company Website");
+  payload.set("replyto", String(payload.get("email") || "").trim());
+  const submittedWhatsAppUrl = makeQuoteWhatsAppUrl(payload);
   try {
     const response = await fetch("https://api.web3forms.com/submit", { method: "POST", body: payload });
     const result = await response.json().catch(() => ({}));
     if (!response.ok || !result.success) throw new Error(result.message || "We couldn't send your request. Please try again.");
     quoteStatus.classList.add("is-success");
     quoteStatus.textContent = "Thank you. Your quote request has been sent successfully.";
+    whatsappSuccessLink.href = submittedWhatsAppUrl;
+    whatsappSuccessLink.hidden = false;
     quoteForm.reset();
+    updateQuoteWhatsAppLink();
     $("#quote-botcheck").checked = false;
   } catch (error) {
     quoteStatus.classList.add("is-error");
@@ -493,6 +587,7 @@ $("#cbm-send").addEventListener("click", () => {
   const quantity = new FormData($("#cbm-form")).get("quantity");
   const calculatedWeight = `${latestCbm.cbm.toFixed(3)} m³; approx. ${latestCbm.chargeable.toFixed(1)} kg chargeable (${quantity} piece${Number(quantity) === 1 ? "" : "s"})`;
   copyPlannerIntoQuote(`CBM estimate: ${latestCbm.cbm.toFixed(3)} m³; volumetric weight uses ${CONFIG.volumetricDivisor} cm³/kg.`, calculatedWeight);
+  updateQuoteWhatsAppLink();
   $("#contact").scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
 });
 
@@ -605,6 +700,8 @@ function initialize() {
   const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   $("#ready-date").min = today;
   setContactDetails();
+  addQuoteWhatsAppActions();
+  addWhatsAppIcons();
   renderServiceIcons();
   renderEditableDetails();
   initializeTheme();
