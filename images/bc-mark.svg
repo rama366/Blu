@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Blues Company BC monogram</title>
+  <rect width="64" height="64" fill="#0b1d32"/>
+  <rect x="3.5" y="3.5" width="57" height="57" fill="none" stroke="#b28e4c"/>
+  <path d="M15 13h15c9 0 14 4 14 11 0 4-2 7-6 9 6 1 9 5 9 10 0 7-5 11-15 11H15V13zm8 7v10h7c4 0 6-2 6-5s-2-5-7-5h-6zm0 17v10h8c5 0 7-1 7-5 0-3-2-5-7-5h-8z" fill="#e3cc99"/>
+  <path d="M50 18a16 16 0 1 0 0 29" fill="none" stroke="#b28e4c" stroke-width="3" stroke-linecap="square"/>
+</svg>
