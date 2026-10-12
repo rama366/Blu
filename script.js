@@ -85,7 +85,7 @@ function initializeMicroSlats() {
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const state = { width: 0, height: 0, dpr: 1, pointerX: 0.5, pointerY: 0.5, targetX: 0.5, targetY: 0.5, time: 0 };
-  const settings = { color: [168, 85, 247], glint: [255, 255, 255], background: [18, 15, 23], slatWidth: 10, slatHeight: 25, gap: 3 };
+  const settings = { color: [168, 85, 247], glint: [255, 255, 255], background: [18, 15, 23], slatWidth: 10, slatHeight: 25, gap: 3, speed: 0.6 };
 
   function resize() {
     const bounds = canvas.getBoundingClientRect();
@@ -98,7 +98,7 @@ function initializeMicroSlats() {
   }
 
   function paint(now) {
-    state.time = reduceMotion ? 0 : now * 0.0006;
+    state.time = reduceMotion ? 0 : now * 0.0006 * settings.speed;
     state.pointerX += (state.targetX - state.pointerX) * 0.08;
     state.pointerY += (state.targetY - state.pointerY) * 0.08;
     const { width, height } = state;
@@ -145,6 +145,11 @@ function initializeMicroSlats() {
     if (!reduceMotion) window.requestAnimationFrame(paint);
   }
 
+  window.BluesMicroSlats = {
+    setColor(color) { settings.color = color; },
+    setSpeed(speed) { settings.speed = Number(speed) || 0.6; }
+  };
+
   canvas.addEventListener("pointermove", event => {
     const bounds = canvas.getBoundingClientRect();
     state.targetX = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
@@ -154,6 +159,24 @@ function initializeMicroSlats() {
   window.addEventListener("resize", resize, { passive: true });
   resize();
   paint(0);
+}
+
+function initializeModeSelector() {
+  const modeData = {
+    sea: ["Sea freight", "Plan full or shared container options, port handling, documents, and the delivery leg before booking.", "Explore sea freight", "#sea-freight", "01"],
+    air: ["Air freight", "Prepare time-sensitive cargo details, chargeable weight, airport handling, and the final delivery handoff.", "Explore air freight", "#air-freight", "02"],
+    road: ["Road & cross-border", "Review the land leg, border requirements, permits, and the delivery handoff across the route.", "Explore road freight", "#road-cross-border", "03"]
+  };
+  const title = $("#mode-title"); const copy = $("#mode-copy"); const cta = $("#mode-cta"); const index = $(".mode-index");
+  if (!title || !copy || !cta || !index) return;
+  $$(".mode-tab").forEach(tab => tab.addEventListener("click", () => {
+    const [heading, description, label, href, number] = modeData[tab.dataset.mode];
+    title.textContent = heading; copy.textContent = description; cta.textContent = label; cta.append(document.createTextNode(" ↗")); cta.href = href; index.textContent = `MODE ${number}`;
+    $$(".mode-tab").forEach(item => { const active = item === tab; item.classList.toggle("is-active", active); item.setAttribute("aria-selected", String(active)); });
+  }));
+  const colors = { violet: [168, 85, 247], teal: [67, 214, 194], gold: [217, 179, 108] };
+  $$(".slat-color").forEach(button => button.addEventListener("click", () => { const active = button.dataset.slatColor; window.BluesMicroSlats?.setColor(colors[active]); $$(".slat-color").forEach(item => { const selected = item === button; item.classList.toggle("is-active", selected); item.setAttribute("aria-pressed", String(selected)); }); }));
+  $$(".slat-speed").forEach(button => button.addEventListener("click", () => { window.BluesMicroSlats?.setSpeed(button.dataset.slatSpeed); $$(".slat-speed").forEach(item => { const selected = item === button; item.classList.toggle("is-active", selected); item.setAttribute("aria-pressed", String(selected)); }); }));
 }
 
 function setContactDetails() {
@@ -809,6 +832,7 @@ function initialize() {
   $("#ready-date").min = today;
   setContactDetails();
 initializeMicroSlats();
+initializeModeSelector();
   addQuoteWhatsAppActions();
   addWhatsAppIcons();
   renderServiceIcons();
