@@ -76,6 +76,86 @@ const carrierCount = $("#carrier-count");
 const carrierEmpty = $("#carrier-empty");
 let latestCbm = null;
 
+
+function initializeMicroSlats() {
+  const canvas = $("#micro-slats-background");
+  if (!canvas) return;
+  const context = canvas.getContext("2d", { alpha: true });
+  if (!context) return;
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const state = { width: 0, height: 0, dpr: 1, pointerX: 0.5, pointerY: 0.5, targetX: 0.5, targetY: 0.5, time: 0 };
+  const settings = { color: [168, 85, 247], glint: [255, 255, 255], background: [18, 15, 23], slatWidth: 10, slatHeight: 25, gap: 3 };
+
+  function resize() {
+    const bounds = canvas.getBoundingClientRect();
+    state.dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+    state.width = Math.max(1, bounds.width);
+    state.height = Math.max(1, bounds.height);
+    canvas.width = Math.round(state.width * state.dpr);
+    canvas.height = Math.round(state.height * state.dpr);
+    context.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+  }
+
+  function paint(now) {
+    state.time = reduceMotion ? 0 : now * 0.0006;
+    state.pointerX += (state.targetX - state.pointerX) * 0.08;
+    state.pointerY += (state.targetY - state.pointerY) * 0.08;
+    const { width, height } = state;
+    context.clearRect(0, 0, width, height);
+    context.fillStyle = `rgb(${settings.background.join(",")})`;
+    context.fillRect(0, 0, width, height);
+
+    const spacingX = settings.slatWidth + settings.gap;
+    const spacingY = settings.slatHeight + settings.gap;
+    const cols = Math.ceil(width / spacingX) + 2;
+    const rows = Math.ceil(height / spacingY) + 2;
+    const direction = 250 * Math.PI / 180;
+    const flowX = Math.cos(direction);
+    const flowY = Math.sin(direction);
+    const pointerInfluence = (state.pointerX - 0.5) * 1.1;
+
+    for (let row = -1; row < rows; row += 1) {
+      for (let col = -1; col < cols; col += 1) {
+        const x = col * spacingX + settings.gap * 0.5;
+        const y = row * spacingY + settings.gap * 0.5;
+        const nx = x / Math.max(width, 1);
+        const ny = y / Math.max(height, 1);
+        const wave = Math.sin((nx * 8.2 + ny * 4.1) + state.time * 1.8) * 0.5 + Math.sin((nx * -4.2 + ny * 7.8) - state.time * 1.25) * 0.25;
+        const cursor = Math.exp(-(((nx - state.pointerX) ** 2) + ((ny - state.pointerY) ** 2)) / 0.055) * pointerInfluence;
+        const crest = Math.max(0, Math.sin(nx * 9.5 + ny * 3.2 + state.time * 2.2 + cursor * 2.8));
+        const depth = 0.62 + wave * 0.18 + cursor * 0.18;
+        const lean = (wave * 0.18 + cursor * 0.28) * (Math.PI / 8);
+        const alpha = Math.max(0.2, Math.min(0.9, depth));
+        const mix = Math.max(0, Math.min(1, crest * 0.85 + cursor * 0.8));
+        const r = Math.round(settings.color[0] * (1 - mix) + settings.glint[0] * mix);
+        const g = Math.round(settings.color[1] * (1 - mix) + settings.glint[1] * mix);
+        const b = Math.round(settings.color[2] * (1 - mix) + settings.glint[2] * mix);
+        context.save();
+        context.translate(x + settings.slatWidth / 2, y + settings.slatHeight / 2);
+        context.rotate(lean + flowX * 0.02);
+        context.globalAlpha = alpha;
+        context.fillStyle = `rgb(${r} ${g} ${b})`;
+        context.beginPath();
+        context.roundRect(-settings.slatWidth / 2, -settings.slatHeight * depth / 2, settings.slatWidth, settings.slatHeight * depth, 5);
+        context.fill();
+        context.restore();
+      }
+    }
+    if (!reduceMotion) window.requestAnimationFrame(paint);
+  }
+
+  canvas.addEventListener("pointermove", event => {
+    const bounds = canvas.getBoundingClientRect();
+    state.targetX = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+    state.targetY = Math.max(0, Math.min(1, (event.clientY - bounds.top) / bounds.height));
+  }, { passive: true });
+  canvas.addEventListener("pointerleave", () => { state.targetX = 0.5; state.targetY = 0.5; });
+  window.addEventListener("resize", resize, { passive: true });
+  resize();
+  paint(0);
+}
+
 function setContactDetails() {
   const phone = $("#contact-phone");
   phone.textContent = CONFIG.contact.phoneDisplay;
@@ -728,6 +808,7 @@ function initialize() {
   const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   $("#ready-date").min = today;
   setContactDetails();
+initializeMicroSlats();
   addQuoteWhatsAppActions();
   addWhatsAppIcons();
   renderServiceIcons();
