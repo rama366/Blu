@@ -5,7 +5,7 @@ const CONFIG = {
   contact: {
     phoneDisplay: "+255 778 164 796",
     phoneE164: "+255778164796",
-    email: "infobluescompany@gmail.com",
+    email: "info@bluescompany.site",
     address: "Dar es Salaam, Tanzania",
     hours: "Open 24 hours, 7 days a week",
     mapQuery: "Dar es Salaam, Tanzania"
@@ -17,12 +17,12 @@ const CONFIG = {
     yearsInBusiness: null
   },
   about: {
-    story: "[Add Blues Company's verified company story here.]",
-    mission: "[Add a concise, verified mission statement here.]",
+    story: "Blues Company helps shippers in Dar es Salaam plan and move cargo with practical freight forwarding support across sea, air and road transport.",
+    mission: "To make every shipment easier to understand, better prepared, and handled with care from origin to destination.",
     promises: [
-      "[Describe a specific service promise the team can consistently meet.]",
-      "[Describe how customers are kept informed during a shipment.]",
-      "[Describe how shipment details and documents are reviewed.]"
+      "Review the route, cargo, and documents before booking.",
+      "Keep customers informed as the shipment progresses.",
+      "Coordinate carriers, customs, and delivery handoffs clearly."
     ]
   },
   volumetricDivisor: 6000,
@@ -546,6 +546,14 @@ routeRequestLink?.addEventListener("click", () => {
 quoteForm.addEventListener("submit", async event => {
   event.preventDefault();
   if (!quoteForm.reportValidity()) return;
+  const phoneValue = String(quoteForm.elements.namedItem("phone").value || "").trim();
+  const emailValue = String(quoteForm.elements.namedItem("email").value || "").trim();
+  if (!phoneValue && !emailValue) {
+    quoteStatus.className = "quote-status is-error";
+    quoteStatus.textContent = "Please add a phone number or email address so we can reply.";
+    quoteForm.elements.namedItem("phone").focus();
+    return;
+  }
   if ($("#quote-botcheck").checked) {
     quoteStatus.className = "quote-status is-error";
     quoteStatus.textContent = "Your request could not be verified. Please reload and try again.";
@@ -568,7 +576,7 @@ quoteForm.addEventListener("submit", async event => {
     const result = await response.json().catch(() => ({}));
     if (!response.ok || !result.success) throw new Error(result.message || "We couldn't send your request. Please try again.");
     quoteStatus.classList.add("is-success");
-    quoteStatus.textContent = "Thank you. Your quote request has been sent successfully.";
+    quoteStatus.textContent = "Thank you — your quote request was sent successfully. We will reply within [X hours].";
     whatsappSuccessLink.href = submittedWhatsAppUrl;
     whatsappSuccessLink.hidden = false;
     quoteForm.reset();

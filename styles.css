@@ -389,3 +389,38 @@ body { background-color:var(--paper); background-image:radial-gradient(ellipse a
   .footer-base { align-items:flex-start; }
   .footer-base .footer-motto { width:100%; margin-left:0; }
 }
+
+/* Blues Company content update: trust, service anchors, and customer proof. */
+.hero h1 { max-width: 680px; font-size: clamp(48px, 5.5vw, 78px); line-height: .94; }
+.hero-subline { display: block; margin-top: 24px; color: var(--brass-light); font-family: var(--serif); font-size: .43em; font-style: italic; line-height: 1; }
+.trust-strip { background: var(--brass); color: var(--navy); border-top: 1px solid rgb(255 255 255 / .25); }
+.trust-grid { min-height: 132px; display: grid; grid-template-columns: 1.25fr 1fr .75fr 1.25fr; gap: 24px; align-items: center; }
+.trust-grid > div { min-height: 56px; padding-left: 18px; border-left: 1px solid rgb(11 29 50 / .25); display: flex; flex-direction: column; justify-content: center; gap: 7px; }
+.trust-grid > div:first-child { padding-left: 0; border-left: 0; }
+.trust-label { color: #536071; font-size: 9px; font-weight: 700; letter-spacing: 1.35px; }
+.trust-grid strong { max-width: 230px; font-family: var(--serif); font-size: 21px; font-weight: 600; line-height: 1.1; }
+.service-anchor { scroll-margin-top: calc(var(--header-height) + 24px); }
+.testimonials-section { background: var(--white); }
+.testimonials-section .section-heading { margin-bottom: 38px; }
+.testimonial-slots { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.testimonial-slots article { display: flex; flex-direction: column; }
+.testimonial-slots article p { flex: 1; }
+.office-address { margin: 24px 0 0; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.footer-motto { display: inline-flex; flex-direction: column; gap: 4px; }
+.footer-motto small { color: #b8bdc2; font-size: 9px; letter-spacing: .04em; }
+@media (max-width: 900px) {
+  .trust-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-block: 22px; }
+  .trust-grid > div:nth-child(3) { padding-left: 0; border-left: 0; }
+  .testimonial-slots { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .hero h1 { font-size: clamp(48px, 11vw, 70px); }
+}
+@media (max-width: 430px) {
+  .trust-grid { grid-template-columns: 1fr; gap: 0; }
+  .trust-grid > div, .trust-grid > div:nth-child(3) { min-height: 0; padding: 14px 0; border-left: 0; border-bottom: 1px solid rgb(11 29 50 / .2); }
+  .trust-grid > div:last-child { border-bottom: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-visual { transform: none !important; }
+}
