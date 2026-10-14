@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1d32">
+  <meta name="robots" content="noindex">
+  <title>Customer portal · Blues Company</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%230b1d32' stroke='%23b28e4c' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='24' fill='none' stroke='%23d9c08b'/%3E%3Cpath d='M32 7 36 25 54 32 36 36 32 57 28 36 10 32 28 25Z' fill='none' stroke='%23d9c08b' stroke-width='1.5'/%3E%3Cpath d='M32 23v22m-7-14h14m-7-8a3 3 0 1 0 0 6m-11 5a11 11 0 0 0 22 0h-4m-18 0 4-4m18 4-4-4' fill='none' stroke='%23fffefa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+</head>
+<body data-guard="user">
+  <div class="side-scrim"></div>
+  <div class="portal-shell">
+
+    <aside class="sidebar">
+      <a class="side-logo" href="index.html" aria-label="Blues Company home">
+        <svg class="house-crest" viewBox="0 0 80 80" role="img" aria-label="Blues Company crest"><circle class="crest-outer" cx="40" cy="40" r="37"/><circle class="crest-inner" cx="40" cy="40" r="31"/><path class="crest-compass" d="m40 11 5 23 23 6-23 5-5 24-5-24-23-5 23-6z"/><path class="crest-anchor" d="M40 28v28m-9-17h18m-9-11a4 4 0 1 0 0 8m-15 8a15 15 0 0 0 30 0h-5m-25 0 5-5m25 5-5-5"/></svg>
+        <span><strong>BLUES COMPANY</strong><small>CUSTOMER PORTAL</small></span>
+      </a>
+      <nav class="side-nav" aria-label="Portal navigation">
+        <a class="side-link is-active" href="#" data-panel-link="overview"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Overview</a>
+        <a class="side-link" href="#" data-panel-link="quotes"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>My quotes</a>
+        <a class="side-link" href="#" data-panel-link="shipments"><svg viewBox="0 0 24 24"><path d="M3 18h18M5 18V9l7-5 7 5v9"/><path d="M9 18v-5h6v5"/></svg>Shipments</a>
+        <a class="side-link" href="#" data-panel-link="documents"><svg viewBox="0 0 24 24"><path d="M4 20h16M6 20V8l6-4 6 4v12"/><path d="M10 20v-6h4v6"/></svg>Documents</a>
+        <a class="side-link" href="#" data-panel-link="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.9 2.9l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.9-2.9l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.9-2.9l.1.1a1.7 1.7 0 0 0 1.9.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5h.1a1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.9 2.9l-.1.1a1.7 1.7 0 0 0-.3 1.9v.1a1.7 1.7 0 0 0 1.5 1h.1a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</a>
+      </nav>
+      <div class="side-foot">
+        <a class="side-link" href="index.html#contact"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Request a new quote</a>
+        <a class="side-link" href="#" data-logout><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>Sign out</a>
+      </div>
+    </aside>
+
+    <main class="portal-main">
+      <div class="topbar">
+        <button class="icon-btn menu-toggle-side" type="button" data-side-toggle aria-label="Open menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+        <div>
+          <h1>Welcome, <span data-user-name>Customer</span></h1>
+          <span class="topbar-crumb">Dar es Salaam · Freight desk</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-btn" type="button" data-theme-toggle aria-label="Switch theme"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+          <div class="bell-wrap">
+            <button class="icon-btn" type="button" data-bell aria-label="Notifications"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="badge-dot">3</span></button>
+            <div class="bell-menu">
+              <div class="bell-item"><span class="bell-ico">QT</span><div><strong>Quote QT-2026-0151 sent</strong><small>Your Dar es Salaam → Kampala road quote is ready to review. · 2h ago</small></div></div>
+              <div class="bell-item"><span class="bell-ico">SH</span><div><strong>SHP-88231 departed Dar es Salaam</strong><small>Vessel MV Bahari Star · V.214E is underway. · 1d ago</small></div></div>
+              <div class="bell-item"><span class="bell-ico">DOC</span><div><strong>Bill of lading uploaded</strong><small>BL-MAEU88231 is available in Documents. · 1d ago</small></div></div>
+            </div>
+          </div>
+          <div class="user-chip"><span class="avatar" data-user-initial>B</span><div><strong data-user-name>Customer</strong><small>Customer account</small></div></div>
+        </div>
+      </div>
+
+      <div class="demo-banner"><strong>Demo portal.</strong> You are viewing sample data so we can approve the design and experience first. In Phase 2 this connects to Supabase: real accounts, your real quotes, shipments and documents.</div>
+
+      <!-- OVERVIEW -->
+      <section class="panel is-active" id="overview">
+        <div class="stat-grid">
+          <div class="stat-card"><span class="stat-label">Active shipments</span><div class="stat-value">2</div><span class="stat-hint up">1 departed this week</span></div>
+          <div class="stat-card"><span class="stat-label">Quotes</span><div class="stat-value">4</div><span class="stat-hint">1 awaiting reply</span></div>
+          <div class="stat-card"><span class="stat-label">Documents</span><div class="stat-value">4</div><span class="stat-hint">All up to date</span></div>
+          <div class="stat-card"><span class="stat-label">Notifications</span><div class="stat-value">3</div><span class="stat-hint down">Unread</span></div>
+        </div>
+        <div class="grid-2">
+          <div class="card" id="current-shipment"></div>
+          <div class="card">
+            <div class="card-head"><div><h2>Recent activity</h2><p>Latest updates on your account</p></div></div>
+            <div class="card-body">
+              <ul class="timeline">
+                <li><strong>Quote QT-2026-0151 sent</strong><small>Road · Dar es Salaam → Kampala · 06 Oct</small></li>
+                <li><strong>SHP-88231 departed port</strong><small>Sea · Dar es Salaam → Dubai · 08 Oct</small></li>
+                <li><strong>Document uploaded</strong><small>Bill of Lading · BL-MAEU88231</small></li>
+                <li><strong>Quote QT-2026-0148 accepted</strong><small>Sea FCL · Dar es Salaam → Dubai · 02 Oct</small></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>Recent quotes</h2><p>Your latest quote requests</p></div><button class="btn btn-outline btn-sm" data-panel-link="quotes">View all</button></div>
+          <div class="table-wrap"><table class="data-table"><thead><tr><th>Reference</th><th>Mode</th><th>Status</th></tr></thead><tbody id="quotes-mini-tbody"></tbody></table></div>
+        </div>
+      </section>
+
+      <!-- QUOTES -->
+      <section class="panel" id="quotes">
+        <div class="card">
+          <div class="card-head"><div><h2>My quotes</h2><p>Every quote request you have sent, with its current status</p></div><a class="btn btn-gold btn-sm" href="index.html#contact">New quote request</a></div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Reference</th><th>Route</th><th>Mode</th><th>Date</th><th>Status</th><th></th></tr></thead>
+              <tbody id="quotes-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SHIPMENTS -->
+      <section class="panel" id="shipments">
+        <div id="shipment-cards"></div>
+      </section>
+
+      <!-- DOCUMENTS -->
+      <section class="panel" id="documents">
+        <div class="card">
+          <div class="card-head"><div><h2>Documents</h2><p>Shipping documents for your bookings</p></div></div>
+          <div class="card-body">
+            <div id="doc-list"></div>
+            <div class="upload-zone">Drag files here to upload, or <button class="btn btn-ghost btn-sm" type="button" data-demo>browse</button><br><small>Demo mode — document upload goes live in Phase 2 with Supabase Storage.</small></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="panel" id="settings">
+        <div class="settings-grid">
+          <div class="card">
+            <div class="card-head"><div><h2>Profile</h2><p>Your account details</p></div></div>
+            <div class="card-body">
+              <div class="field-row">
+                <div class="field"><label for="set-name">Full name</label><input id="set-name" type="text" value="" data-user-name></div>
+                <div class="field"><label for="set-company">Company</label><input id="set-company" type="text" placeholder="Not specified"></div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label for="set-email">Email</label><input id="set-email" type="email" placeholder="you@company.com"></div>
+                <div class="field"><label for="set-phone">Phone / WhatsApp</label><input id="set-phone" type="tel" placeholder="+255 ..."></div>
+              </div>
+              <button class="btn btn-gold" type="button" data-demo>Save changes</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>Session</h2><p>Sign out of this device</p></div></div>
+            <div class="card-body">
+              <button class="btn btn-outline" type="button" data-logout>Sign out <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="portal.js"></script>
+</body>
+</html>
