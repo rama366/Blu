@@ -454,3 +454,9 @@ body { background-color:var(--paper); background-image:radial-gradient(ellipse a
 .mode-panel { min-height: 230px; padding: 28px; }.mode-index { color: #d4a8ff; font-size: 9px; font-weight: 700; letter-spacing: 1.4px; }.mode-panel h3 { margin: 22px 0 9px; color: #fff; font-family: var(--serif); font-size: 38px; font-weight: 500; }.mode-panel p { max-width: 430px; margin: 0 0 23px; color: #c5b9ca; font-size: 14px; line-height: 1.65; }
 @media (max-width: 760px) { .micro-slats-layout { grid-template-columns: 1fr; gap: 34px; }.micro-slats-studio { padding-block: 76px; }.mode-panel { min-height: 210px; padding: 22px; } }
 @media (prefers-reduced-motion: reduce) { .mode-tab, .slat-speed, .slat-color { transition: none !important; } }
+
+/* Live preview canvas behind the MicroSlats controls. */
+.micro-slats-studio { position: relative; isolation: isolate; overflow: hidden; }
+.micro-slats-studio .micro-slats-background { opacity: .55; pointer-events: none; }
+.micro-slats-studio::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgb(23 19 29 / .92), rgb(23 19 29 / .4) 60%, rgb(23 19 29 / .7)); }
+.micro-slats-layout { position: relative; z-index: 2; }

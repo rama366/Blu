@@ -78,16 +78,20 @@ let latestCbm = null;
 
 
 function initializeMicroSlats() {
-  const canvas = $("#micro-slats-background");
-  if (!canvas) return;
-  const context = canvas.getContext("2d", { alpha: true });
-  if (!context) return;
-
+  const canvases = $$(".micro-slats-background");
+  if (!canvases.length) return;
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const state = { width: 0, height: 0, dpr: 1, pointerX: 0.5, pointerY: 0.5, targetX: 0.5, targetY: 0.5, time: 0 };
   const settings = { color: [168, 85, 247], glint: [255, 255, 255], background: [18, 15, 23], slatWidth: 10, slatHeight: 25, gap: 3, speed: 0.6 };
+  const layers = canvases.map(canvas => {
+    const context = canvas.getContext("2d", { alpha: true });
+    if (!context) return null;
+    return { canvas, context, visible: true, state: { width: 0, height: 0, dpr: 1, pointerX: 0.5, pointerY: 0.5, targetX: 0.5, targetY: 0.5 } };
+  }).filter(Boolean);
+  if (!layers.length) return;
+  let frameId = 0;
 
-  function resize() {
+  function resize(layer) {
+    const { canvas, context, state } = layer;
     const bounds = canvas.getBoundingClientRect();
     state.dpr = Math.min(window.devicePixelRatio || 1, 1.75);
     state.width = Math.max(1, bounds.width);
@@ -97,8 +101,9 @@ function initializeMicroSlats() {
     context.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
   }
 
-  function paint(now) {
-    state.time = reduceMotion ? 0 : now * 0.0006 * settings.speed;
+  function draw(layer, now) {
+    const { context, state } = layer;
+    const time = reduceMotion ? 0 : now * 0.0006 * settings.speed;
     state.pointerX += (state.targetX - state.pointerX) * 0.08;
     state.pointerY += (state.targetY - state.pointerY) * 0.08;
     const { width, height } = state;
@@ -112,7 +117,6 @@ function initializeMicroSlats() {
     const rows = Math.ceil(height / spacingY) + 2;
     const direction = 250 * Math.PI / 180;
     const flowX = Math.cos(direction);
-    const flowY = Math.sin(direction);
     const pointerInfluence = (state.pointerX - 0.5) * 1.1;
 
     for (let row = -1; row < rows; row += 1) {
@@ -121,9 +125,9 @@ function initializeMicroSlats() {
         const y = row * spacingY + settings.gap * 0.5;
         const nx = x / Math.max(width, 1);
         const ny = y / Math.max(height, 1);
-        const wave = Math.sin((nx * 8.2 + ny * 4.1) + state.time * 1.8) * 0.5 + Math.sin((nx * -4.2 + ny * 7.8) - state.time * 1.25) * 0.25;
+        const wave = Math.sin((nx * 8.2 + ny * 4.1) + time * 1.8) * 0.5 + Math.sin((nx * -4.2 + ny * 7.8) - time * 1.25) * 0.25;
         const cursor = Math.exp(-(((nx - state.pointerX) ** 2) + ((ny - state.pointerY) ** 2)) / 0.055) * pointerInfluence;
-        const crest = Math.max(0, Math.sin(nx * 9.5 + ny * 3.2 + state.time * 2.2 + cursor * 2.8));
+        const crest = Math.max(0, Math.sin(nx * 9.5 + ny * 3.2 + time * 2.2 + cursor * 2.8));
         const depth = 0.62 + wave * 0.18 + cursor * 0.18;
         const lean = (wave * 0.18 + cursor * 0.28) * (Math.PI / 8);
         const alpha = Math.max(0.2, Math.min(0.9, depth));
@@ -142,23 +146,49 @@ function initializeMicroSlats() {
         context.restore();
       }
     }
-    if (!reduceMotion) window.requestAnimationFrame(paint);
+  }
+
+  // Animate only canvases that are on screen, so off-screen sections cost nothing.
+  function frame(now) {
+    const active = layers.filter(layer => layer.visible);
+    active.forEach(layer => draw(layer, now));
+    frameId = !reduceMotion && active.length ? window.requestAnimationFrame(frame) : 0;
+  }
+
+  function repaint() {
+    if (reduceMotion) { layers.filter(layer => layer.visible).forEach(layer => draw(layer, 0)); return; }
+    if (!frameId) frameId = window.requestAnimationFrame(frame);
   }
 
   window.BluesMicroSlats = {
-    setColor(color) { settings.color = color; },
-    setSpeed(speed) { settings.speed = Number(speed) || 0.6; }
+    setColor(color) { if (Array.isArray(color)) { settings.color = color; repaint(); } },
+    setSpeed(speed) { settings.speed = Number(speed) || 0.6; repaint(); }
   };
 
-  canvas.addEventListener("pointermove", event => {
-    const bounds = canvas.getBoundingClientRect();
-    state.targetX = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
-    state.targetY = Math.max(0, Math.min(1, (event.clientY - bounds.top) / bounds.height));
-  }, { passive: true });
-  canvas.addEventListener("pointerleave", () => { state.targetX = 0.5; state.targetY = 0.5; });
-  window.addEventListener("resize", resize, { passive: true });
-  resize();
-  paint(0);
+  layers.forEach(layer => {
+    const host = layer.canvas.parentElement || layer.canvas;
+    host.addEventListener("pointermove", event => {
+      const bounds = layer.canvas.getBoundingClientRect();
+      layer.state.targetX = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+      layer.state.targetY = Math.max(0, Math.min(1, (event.clientY - bounds.top) / bounds.height));
+    }, { passive: true });
+    host.addEventListener("pointerleave", () => { layer.state.targetX = 0.5; layer.state.targetY = 0.5; });
+    resize(layer);
+  });
+  window.addEventListener("resize", () => { layers.forEach(resize); repaint(); }, { passive: true });
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const layer = layers.find(item => item.canvas === entry.target);
+        if (layer) layer.visible = entry.isIntersecting;
+      });
+      repaint();
+    }, { threshold: 0 });
+    layers.forEach(layer => { layer.visible = false; observer.observe(layer.canvas); });
+  } else {
+    repaint();
+  }
 }
 
 function initializeModeSelector() {
@@ -345,7 +375,7 @@ function renderEditableDetails() {
     const routeText = $$(".lane-route span", article);
     routeText[0].textContent = lane.origin;
     routeText[1].textContent = lane.destination;
-    laneGrid.append(article);
+    if (laneGrid) laneGrid.append(article);
     const option = document.createElement("option");
     option.value = lane.id;
     option.textContent = `${lane.origin} → ${lane.destination}`;
