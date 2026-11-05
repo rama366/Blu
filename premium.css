@@ -22,7 +22,7 @@
 .button{position:relative;overflow:hidden;isolation:isolate}
 .button::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(115deg,transparent 30%,rgb(255 255 255/.35) 50%,transparent 70%);transform:translateX(-130%);transition:transform .65s ease}
 .button:hover::after{transform:translateX(130%)}
-.button-gold{background:linear-gradient(135deg,#c9a45e,#a5864e 55%,#92713b)}
+.button-gold{background:linear-gradient(135deg,#e2ca95,#d9c08b 55%,#c9a45e)}
 .button-gold:hover{filter:brightness(1.08)}
 .button,.service-card,.carrier-item{transition-timing-function:cubic-bezier(.22,.8,.28,1)}
 

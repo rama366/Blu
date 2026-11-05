@@ -5,12 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1d32">
   <meta name="description" content="Connect available trucks with cargo that needs a reliable route across Tanzania and East Africa.">
+  <link rel="canonical" href="https://www.bluescompany.site/marketplace.html">
+  <meta property="og:site_name" content="Blues Company">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Truck Exchange · Blues Company">
+  <meta property="og:description" content="Connect available trucks with cargo that needs a reliable route across Tanzania and East Africa.">
+  <meta property="og:url" content="https://www.bluescompany.site/marketplace.html">
+  <meta property="og:image" content="https://www.bluescompany.site/images/bc-mark.svg">
   <title>Truck Exchange · Blues Company</title>
+  <link rel="icon" type="image/svg+xml" href="/images/bc-mark.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="portal.css">
   <link rel="stylesheet" href="marketplace.css">
+  <link rel="stylesheet" href="storage-notice.css">
 </head>
 <body class="marketplace-page">
   <header class="market-header">
@@ -27,10 +36,11 @@
   </header>
 
   <main class="market-wrap">
+    <h1 class="market-page-title">Truck Exchange</h1>
     <div class="market-status" id="market-status" role="status" aria-live="polite">Checking your account…</div>
     <section class="market-auth" id="market-auth" hidden>
       <p class="eyebrow">A FREIGHT DESK FOR EVERYONE</p>
-      <h1>Good work should find its next route.</h1>
+      <h2>Good work should find its next route.</h2>
       <p>Sign in or create a free account to see available trucks, post cargo, and contact another member.</p>
       <a class="btn btn-gold" href="login.html?next=marketplace.html">Sign in or create an account <span aria-hidden="true">→</span></a>
     </section>
@@ -39,7 +49,7 @@
       <section class="market-heading">
         <div>
           <p class="eyebrow">BLUES COMPANY / TRUCK EXCHANGE</p>
-          <h1>Give the return trip<br><em>a reason to run.</em></h1>
+          <h2>Give the return trip<br><em>a reason to run.</em></h2>
           <p class="market-lede">Match available truck space with cargo that needs moving. Post a route, compare details, and contact the other party directly.</p>
           <p class="market-caution">Confirm the operator, vehicle, cargo, insurance, and payment terms before you agree to a job.</p>
         </div>
@@ -124,5 +134,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
   <script src="marketplace.js" defer></script>
+  <script src="storage-notice.js" defer></script>
 </body>
 </html>

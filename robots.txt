@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /dashboard.html
+Disallow: /schema.sql
+Disallow: /marketplace-schema.sql
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin.html
+Disallow: /dashboard.html
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin.html
+Disallow: /dashboard.html
+
+User-agent: GPTBot
+Disallow: /
+
+Sitemap: https://www.bluescompany.site/sitemap.xml

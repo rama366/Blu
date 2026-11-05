@@ -7,7 +7,7 @@ const CONFIG = {
     phoneE164: "+255778164796",
     email: "info@bluescompany.site",
     address: "Dar es Salaam, Tanzania",
-    hours: "Open 24 hours, 7 days a week",
+    hours: "Contact us to confirm current availability.",
     mapQuery: "Dar es Salaam, Tanzania"
   },
   whatsappPhone: "255778164796",
@@ -709,7 +709,7 @@ quoteForm.addEventListener("submit", async event => {
     const result = await response.json().catch(() => ({}));
     if (!response.ok || !result.success) throw new Error(result.message || "We couldn't send your request. Please try again.");
     quoteStatus.classList.add("is-success");
-    quoteStatus.textContent = "Thank you — your quote request was sent successfully. We will reply within [X hours].";
+    quoteStatus.textContent = "Thank you — your quote request was sent. We will reply using the contact details you provided.";
     whatsappSuccessLink.href = submittedWhatsAppUrl;
     whatsappSuccessLink.hidden = false;
     quoteForm.reset();

@@ -164,8 +164,11 @@
       var name = form.name.value.trim(), email = form.email.value.trim(), password = form.password.value;
       if (!name || !email || !password) { fail('Please complete all required fields.'); return; }
       if (password.length < 8) { fail('Password must be at least 8 characters.'); return; }
-      var consent = form.querySelector('input[type="checkbox"][required]');
-      if (consent && !consent.checked) { fail('Please agree to the privacy notice to create an account.'); return; }
+      var requiredConsents = Array.prototype.slice.call(form.querySelectorAll('input[type="checkbox"][required]'));
+      if (requiredConsents.some(function (input) { return !input.checked; })) {
+        fail('Confirm your age and agree to the privacy notice to create an account.');
+        return;
+      }
       if (isDemo()) {
         localStorage.setItem('blues_demo_role', 'user');
         toast('Demo account created — welcome aboard.');

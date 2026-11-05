@@ -1,0 +1,19 @@
+# Blues Company
+
+> Freight forwarding information and shipment-planning tools from Dar es Salaam, Tanzania.
+
+## Official pages
+- [Homepage](https://www.bluescompany.site/): freight services, carrier links, planning tools, and quote requests.
+- [Truck Exchange](https://www.bluescompany.site/marketplace.html): signed-in marketplace for truck capacity and cargo requests.
+- [Policies](https://www.bluescompany.site/policies.html): website terms, privacy, cookies, and payment/refund information.
+
+## Important context
+- Carrier tracking is provided by the linked shipping lines; this website does not provide live carrier data.
+- Planning calculators and route suggestions are indicative and are not a booking, schedule, or delivery promise.
+- Service availability, rates, cargo requirements, and payment terms must be confirmed in a written quote before booking.
+- Marketplace members should independently verify operator identity, vehicle suitability, insurance, cargo, and payment terms.
+
+## Contact
+- Phone / WhatsApp: +255 778 164 796
+- Email: info@bluescompany.site
+- Location: Dar es Salaam, Tanzania
