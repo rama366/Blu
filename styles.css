@@ -184,6 +184,16 @@ h1,h2,h3,h4,p { margin-top:0; }
 .privacy-section { padding:78px 0; background:var(--paper); }.privacy-layout { display:grid; grid-template-columns:.7fr 1.3fr; gap:8%; }.privacy-layout h2 { font-size:43px; }.privacy-layout h2 em { color:var(--brass); }.privacy-layout > div:last-child p { max-width:760px; margin:0 0 12px; color:var(--muted); font-size:13px; line-height:1.7; }
 .site-footer { padding:27px 0; background:var(--navy); color:#f5f1e8; }.footer-inner { min-height:54px; display:flex; align-items:center; justify-content:space-between; gap:20px; }.footer-inner .wordmark strong { color:#fff; }.footer-inner .wordmark small { color:#aebbc1; }.footer-inner > p { margin:0; color:#b7c2c8; font-size:11px; }.footer-inner > p span { padding-inline:5px; color:var(--brass-light); }.footer-links { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:12px 20px; color:#d6dce0; font-size:11px; }.footer-links a:hover { color:var(--brass-light); }
 .whatsapp-float { position:fixed; z-index:90; right:22px; bottom:22px; width:58px; height:58px; display:grid; place-items:center; border:1px solid #fff; border-radius:50%; background:#23795a; color:white; box-shadow:0 5px 16px rgb(0 0 0 / .22); transition:transform .2s ease,background .2s ease; }.whatsapp-float .whatsapp-icon { width:31px; height:31px; }.whatsapp-float:hover { transform:translateY(-4px); background:#155c42; }.back-top-button { position:fixed; z-index:80; right:29px; bottom:91px; width:43px;height:43px; display:none; place-items:center; border:1px solid var(--brass); background:var(--navy); color:var(--brass-light); font-size:21px; cursor:pointer; }.back-top-button.is-visible { display:grid; animation:rise-in .25s ease both; }
+.share-widget { position:fixed; z-index:95; left:22px; bottom:22px; }
+.share-toggle { width:52px; height:52px; display:grid; place-items:center; border:1px solid var(--line); border-radius:50%; background:var(--white); color:var(--navy); box-shadow:0 5px 16px rgb(0 0 0/.18); cursor:pointer; transition:transform .2s ease,background .2s ease; }
+.share-toggle:hover,.share-toggle[aria-expanded="true"] { transform:translateY(-3px); background:var(--brass-light); }
+.share-toggle svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.share-menu { position:absolute; left:0; bottom:calc(100% + 12px); width:220px; padding:10px; display:grid; gap:3px; border:1px solid var(--line); border-radius:7px; background:var(--white); color:var(--ink); box-shadow:0 12px 30px rgb(0 0 0/.2); animation:rise-in .2s ease both; }
+.share-menu[hidden] { display:none; }
+.share-menu strong { padding:8px 10px 7px; font-size:12px; }
+.share-menu a,.share-menu button { width:100%; padding:9px 10px; border:0; background:transparent; color:var(--muted); text-align:left; font-size:12px; font-weight:600; cursor:pointer; }
+.share-menu a:hover,.share-menu button:hover { background:var(--surface); color:var(--ink); }
+.share-feedback { min-height:15px; padding:2px 10px 4px; color:var(--green); font-size:10px; }
 @keyframes rise-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 [data-reveal] { opacity:1; transform:translateY(0); }
 html.reveal-ready [data-reveal].is-visible { animation:reveal-in .7s both; }

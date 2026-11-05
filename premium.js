@@ -62,4 +62,94 @@
       element.style.animation = "hero-rise .9s cubic-bezier(.22,.8,.28,1) " + (0.15 + index * 0.12) + "s both";
     });
   }
+
+  /* Truck exchange links use the existing site navigation and footer. */
+  const tradeMenu = [...document.querySelectorAll(".nav-mega")].find((item) => item.querySelector("summary")?.textContent.trim() === "Trade lanes");
+  const tradeLinks = tradeMenu?.querySelector(".mega-panel > div");
+  if (tradeLinks && !tradeLinks.querySelector('a[href="marketplace.html"]')) {
+    const link = document.createElement("a");
+    link.href = "marketplace.html";
+    link.textContent = "Truck exchange";
+    tradeLinks.append(link);
+  }
+  const footerTools = [...document.querySelectorAll(".footer-column")].find((item) => item.querySelector("h2")?.textContent.trim() === "Tools");
+  if (footerTools && !footerTools.querySelector('a[href="marketplace.html"]')) {
+    const link = document.createElement("a");
+    link.href = "marketplace.html";
+    link.textContent = "Truck exchange";
+    footerTools.append(link);
+  }
+
+  const privacyCopy = document.querySelector(".privacy-layout > div:last-child");
+  if (privacyCopy && !privacyCopy.querySelector("[data-marketplace-privacy]")) {
+    const note = document.createElement("p");
+    note.dataset.marketplacePrivacy = "";
+    note.append("Truck Exchange listings are visible to signed-in members. Contact details and messages in an inquiry are visible only to the sender and listing owner. Supabase hosts account and exchange data; see ");
+    const policy = document.createElement("a");
+    policy.href = "https://supabase.com/privacy";
+    policy.target = "_blank";
+    policy.rel = "noopener noreferrer";
+    policy.textContent = "Supabase's privacy policy";
+    note.append(policy, ". Do not share identity documents, payment-card details, or passwords in an inquiry.");
+    privacyCopy.append(note);
+  }
+
+  /* Accessible, dependency-free share controls adapted from the supplied menu. */
+  const share = document.createElement("div");
+  share.className = "share-widget";
+  share.innerHTML = '<button class="share-toggle" type="button" aria-expanded="false" aria-controls="share-menu" aria-label="Share this website" title="Share this website"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.6 6.6-4.2m-6.6 7 6.6 4.2"/></svg></button><div class="share-menu" id="share-menu" hidden><strong>Share Blues Company</strong><button type="button" data-native-share>Share link</button><a data-share-whatsapp target="_blank" rel="noopener noreferrer">WhatsApp</a><a data-share-email>Email</a><button type="button" data-copy-link>Copy website link</button><span class="share-feedback" role="status" aria-live="polite"></span></div>';
+  document.body.append(share);
+
+  const shareToggle = share.querySelector(".share-toggle");
+  const shareMenu = share.querySelector(".share-menu");
+  const shareUrl = document.querySelector('link[rel="canonical"]')?.href || location.href;
+  const shareTitle = document.title;
+  const shareText = "Blues Company freight forwarding from Dar es Salaam";
+  share.querySelector("[data-share-whatsapp]").href = "https://wa.me/?text=" + encodeURIComponent(shareText + " " + shareUrl);
+  share.querySelector("[data-share-email]").href = "mailto:?subject=" + encodeURIComponent(shareTitle) + "&body=" + encodeURIComponent(shareText + " " + shareUrl);
+
+  async function copyShareLink() {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+    } catch (error) {
+      const input = document.createElement("textarea");
+      input.value = shareUrl;
+      input.setAttribute("readonly", "");
+      input.style.position = "fixed";
+      input.style.opacity = "0";
+      document.body.append(input);
+      input.select();
+      document.execCommand("copy");
+      input.remove();
+    }
+    share.querySelector(".share-feedback").textContent = "Website link copied.";
+  }
+
+  shareToggle.addEventListener("click", () => {
+    const open = shareToggle.getAttribute("aria-expanded") !== "true";
+    shareToggle.setAttribute("aria-expanded", String(open));
+    shareMenu.hidden = !open;
+    if (open) share.querySelector("[data-native-share]").focus();
+  });
+  share.querySelector("[data-copy-link]").addEventListener("click", copyShareLink);
+  share.querySelector("[data-native-share]").addEventListener("click", async () => {
+    if (navigator.share) {
+      try { await navigator.share({ title: shareTitle, text: shareText, url: shareUrl }); }
+      catch (error) { if (error.name !== "AbortError") share.querySelector(".share-feedback").textContent = "Sharing is unavailable here."; }
+    } else {
+      await copyShareLink();
+    }
+  });
+  document.addEventListener("click", (event) => {
+    if (share.contains(event.target)) return;
+    shareMenu.hidden = true;
+    shareToggle.setAttribute("aria-expanded", "false");
+  });
+  share.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      shareMenu.hidden = true;
+      shareToggle.setAttribute("aria-expanded", "false");
+      shareToggle.focus();
+    }
+  });
 })();

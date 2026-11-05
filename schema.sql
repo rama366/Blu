@@ -118,6 +118,10 @@ alter table public.settings        enable row level security;
 create policy "profiles_select_own"   on public.profiles for select using (auth.uid() = id or public.is_admin());
 create policy "profiles_update_own"   on public.profiles for update using (auth.uid() = id or public.is_admin());
 
+-- Keep users from granting themselves admin access through their own profile.
+revoke update on table public.profiles from anon, authenticated;
+grant update (full_name, company, phone) on table public.profiles to authenticated;
+
 -- quotes: customers see their own; admins see all; authenticated users can create their own
 create policy "quotes_select" on public.quotes for select
   using (customer_id = auth.uid() or public.is_admin());

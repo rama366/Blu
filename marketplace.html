@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1d32">
+  <meta name="description" content="Connect available trucks with cargo that needs a reliable route across Tanzania and East Africa.">
+  <title>Truck Exchange · Blues Company</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css">
+  <link rel="stylesheet" href="marketplace.css">
+</head>
+<body class="marketplace-page">
+  <header class="market-header">
+    <a class="market-brand" href="index.html" aria-label="Blues Company home">
+      <img src="images/bc-mark.svg" alt="">
+      <span><strong>BLUES COMPANY</strong><small>TRUCK EXCHANGE</small></span>
+    </a>
+    <nav aria-label="Marketplace navigation">
+      <a href="index.html">Website</a>
+      <a href="dashboard.html">My portal</a>
+      <button class="btn btn-outline btn-sm" type="button" data-market-signout hidden>Sign out</button>
+      <button class="icon-btn" type="button" data-market-theme aria-label="Switch theme" title="Switch theme"><span aria-hidden="true">◐</span></button>
+    </nav>
+  </header>
+
+  <main class="market-wrap">
+    <div class="market-status" id="market-status" role="status" aria-live="polite">Checking your account…</div>
+    <section class="market-auth" id="market-auth" hidden>
+      <p class="eyebrow">A FREIGHT DESK FOR EVERYONE</p>
+      <h1>Good work should find its next route.</h1>
+      <p>Sign in or create a free account to see available trucks, post cargo, and contact another member.</p>
+      <a class="btn btn-gold" href="login.html?next=marketplace.html">Sign in or create an account <span aria-hidden="true">→</span></a>
+    </section>
+
+    <div id="market-app" hidden>
+      <section class="market-heading">
+        <div>
+          <p class="eyebrow">BLUES COMPANY / TRUCK EXCHANGE</p>
+          <h1>Give the return trip<br><em>a reason to run.</em></h1>
+          <p class="market-lede">Match available truck space with cargo that needs moving. Post a route, compare details, and contact the other party directly.</p>
+          <p class="market-caution">Confirm the operator, vehicle, cargo, insurance, and payment terms before you agree to a job.</p>
+        </div>
+        <div class="match-graphic" aria-hidden="true">
+          <svg viewBox="0 0 360 200" role="presentation">
+            <path class="network-line" d="M35 145 105 85 180 130 255 60 325 110M105 85 115 165 180 130 250 155 325 110M35 145 115 165"/>
+            <path class="network-route" d="M35 145 105 85 180 130 255 60 325 110"/>
+            <circle class="network-node" cx="35" cy="145" r="7"/><circle class="network-node" cx="105" cy="85" r="6"/><circle class="network-node" cx="180" cy="130" r="8"/><circle class="network-node" cx="255" cy="60" r="6"/><circle class="network-node" cx="325" cy="110" r="7"/>
+            <text x="22" y="178">TRUCK</text><text x="281" y="145">CARGO</text>
+          </svg>
+          <span>ROUTES / CAPACITY / TIMING</span>
+        </div>
+      </section>
+
+      <section class="market-board" aria-label="Truck and cargo listings">
+        <div class="market-toolbar">
+          <div class="market-tabs" role="tablist" aria-label="Marketplace views" style="--active-index: 0">
+            <span class="market-tab-indicator" aria-hidden="true"></span>
+            <button type="button" class="market-tab is-active" role="tab" aria-selected="true" data-view="board">All listings</button>
+            <button type="button" class="market-tab" role="tab" aria-selected="false" data-view="trucks">Available trucks</button>
+            <button type="button" class="market-tab" role="tab" aria-selected="false" data-view="loads">Cargo requests</button>
+            <button type="button" class="market-tab" role="tab" aria-selected="false" data-view="matches">Route matches</button>
+            <button type="button" class="market-tab" role="tab" aria-selected="false" data-view="activity">My activity</button>
+          </div>
+          <button type="button" class="btn btn-gold" id="toggle-listing-form">Post a truck or load <span aria-hidden="true">＋</span></button>
+        </div>
+
+        <div class="market-filters" id="listing-filters">
+          <label class="market-search">Search routes<input id="route-search" type="search" placeholder="City or region" autocomplete="off"></label>
+          <label class="market-date">Pickup date<input id="date-filter" type="date"></label>
+          <span class="market-count" id="listing-count" aria-live="polite"></span>
+        </div>
+
+        <div class="market-content">
+          <section class="listing-grid" id="listing-grid" aria-live="polite"></section>
+          <section class="match-grid" id="match-grid" hidden aria-live="polite"></section>
+          <section class="activity-grid" id="activity-grid" hidden>
+            <div><h2>My listings</h2><div id="my-listings"></div></div>
+            <div><h2>Inquiries</h2><div id="my-inquiries"></div></div>
+          </section>
+
+          <aside class="listing-form-panel" id="listing-form-panel" hidden>
+            <div class="form-panel-head"><div><p class="eyebrow">NEW POST</p><h2>Share a route</h2></div><button class="icon-btn" id="close-listing-form" type="button" aria-label="Close form">×</button></div>
+            <form id="listing-form">
+              <label class="field">I am posting
+                <select name="listing_type" id="listing-type" required><option value="truck">An available truck</option><option value="load">Cargo that needs a truck</option></select>
+              </label>
+              <div class="field-row">
+                <label class="field">Current pickup location<input name="origin" required maxlength="120" placeholder="City, depot or region"></label>
+                <label class="field">Destination<input name="destination" required maxlength="120" placeholder="City, depot or region"></label>
+              </div>
+              <div class="field-row">
+                <label class="field">Ready date<input name="pickup_date" type="date" required></label>
+                <label class="field">Vehicle type<select name="vehicle_type" id="vehicle-type"><option value="">Any / not specified</option><option>Flatbed</option><option>Box truck</option><option>Container carrier</option><option>Refrigerated</option><option>Tanker</option><option>Other heavy vehicle</option></select></label>
+              </div>
+              <div class="field-row">
+                <label class="field">Capacity (tonnes)<input name="capacity_tons" id="capacity" type="number" min="0.1" max="1000" step="0.1" placeholder="e.g. 20"></label>
+                <label class="field">Rate (optional)<span class="price-input"><select name="price_currency" aria-label="Rate currency"><option value="TZS">TZS</option><option value="USD">USD</option></select><input name="price_amount" type="number" min="0" step="1000" placeholder="Negotiable"></span></label>
+              </div>
+              <label class="field" id="cargo-field">Cargo details<textarea name="cargo_description" id="cargo-description" rows="3" maxlength="500" placeholder="Cargo type, quantity and handling needs"></textarea></label>
+              <label class="field">Notes for the other party<textarea name="notes" rows="3" maxlength="1000" placeholder="Loading access, return timing, special requirements"></textarea></label>
+              <button class="btn btn-gold btn-block" type="submit">Publish listing <span aria-hidden="true">→</span></button>
+              <p class="form-footnote">Your phone and email stay private. Share contact details only when you send or respond to an inquiry.</p>
+            </form>
+          </aside>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <dialog class="inquiry-dialog" id="inquiry-dialog" aria-labelledby="inquiry-title">
+    <form id="inquiry-form">
+      <div class="form-panel-head"><div><p class="eyebrow">PRIVATE INQUIRY</p><h2 id="inquiry-title">Contact the poster</h2><p id="inquiry-route" class="inquiry-route"></p></div><button class="icon-btn" id="close-inquiry" type="button" aria-label="Close inquiry">×</button></div>
+      <input type="hidden" name="listing_id">
+      <label class="field">Your name<input name="contact_name" autocomplete="name" required maxlength="120"></label>
+      <label class="field">How should they reach you?<input name="contact_method" required maxlength="160" placeholder="Phone / WhatsApp or email"></label>
+      <label class="field">Message<textarea name="message" rows="4" required minlength="10" maxlength="1500" placeholder="Ask about timing, cargo, or vehicle details"></textarea></label>
+      <button class="btn btn-gold btn-block" type="submit">Send inquiry <span aria-hidden="true">→</span></button>
+    </form>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="marketplace.js" defer></script>
+</body>
+</html>

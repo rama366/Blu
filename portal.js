@@ -82,6 +82,12 @@
   function initAuth() {
     var card = $('[data-auth]');
     if (!card) return;
+    var authMode = $('[data-auth-mode]');
+    if (authMode) {
+      authMode.innerHTML = isDemo()
+        ? '<strong>Preview mode.</strong> Sign-in is stored on this device only until the secure account service is configured.'
+        : '<strong>Secure account portal.</strong> Sign in or create an account with the configured Supabase service.';
+    }
 
     /* Tabs */
     $$('[data-auth-tab]').forEach(function (tab) {
@@ -125,6 +131,17 @@
       });
     });
 
+    var forgotLink = $('[data-forgot-password]');
+    if (forgotLink) forgotLink.addEventListener('click', function (e) {
+      e.preventDefault();
+      var email = $('[data-auth-pane="signin"] [name="email"]').value.trim();
+      if (!email) { fail('Enter your email address first.'); return; }
+      if (isDemo()) { fail('Password reset is available after the secure account service is configured.'); return; }
+      sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + window.location.pathname })
+        .then(function (res) { fail(res.error ? res.error.message : 'If that account exists, a reset link is on its way.'); })
+        .catch(function () { fail('We could not reach the account service. Please try again.'); });
+    });
+
     function fail(msg) { toast(msg); }
 
     function signIn(form) {
@@ -140,13 +157,15 @@
       sb.auth.signInWithPassword({ email: email, password: password }).then(function (res) {
         if (res.error) { fail(res.error.message); return; }
         routeAfterAuth(res.data.user.id);
-      });
+      }).catch(function () { fail('We could not reach the account service. Please try again.'); });
     }
 
     function signUp(form) {
       var name = form.name.value.trim(), email = form.email.value.trim(), password = form.password.value;
       if (!name || !email || !password) { fail('Please complete all required fields.'); return; }
       if (password.length < 8) { fail('Password must be at least 8 characters.'); return; }
+      var consent = form.querySelector('input[type="checkbox"][required]');
+      if (consent && !consent.checked) { fail('Please agree to the privacy notice to create an account.'); return; }
       if (isDemo()) {
         localStorage.setItem('blues_demo_role', 'user');
         toast('Demo account created — welcome aboard.');
@@ -155,19 +174,25 @@
       }
       sb.auth.signUp({
         email: email, password: password,
-        options: { data: { full_name: name, company: form.company ? form.company.value.trim() : '', phone: form.phone ? form.phone.value.trim() : '' } }
+        options: {
+          emailRedirectTo: window.location.origin + window.location.pathname + (new URLSearchParams(location.search).get('next') === 'marketplace.html' ? '?next=marketplace.html' : ''),
+          data: { full_name: name, company: form.company ? form.company.value.trim() : '', phone: form.phone ? form.phone.value.trim() : '' }
+        }
       }).then(function (res) {
         if (res.error) { fail(res.error.message); return; }
         if (res.data.session) { routeAfterAuth(res.data.user.id); }
         else { toast('Account created — check your email to confirm, then sign in.'); }
-      });
+      }).catch(function () { fail('We could not reach the account service. Please try again.'); });
     }
 
     function routeAfterAuth(userId) {
       sb.from('profiles').select('is_admin').eq('id', userId).single().then(function (res) {
+        if (res.error) { fail('Your account profile is not ready yet. Please contact Blues Company.'); return; }
         var admin = res.data && res.data.is_admin;
         toast('Welcome back.');
-        setTimeout(function () { location.href = admin ? 'admin.html' : 'dashboard.html'; }, 450);
+        var next = new URLSearchParams(location.search).get('next');
+        var destination = !admin && next === 'marketplace.html' ? next : (admin ? 'admin.html' : 'dashboard.html');
+        setTimeout(function () { location.href = destination; }, 450);
       });
     }
   }
